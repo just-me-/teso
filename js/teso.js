@@ -1,6 +1,52 @@
+// on load 
+$(document).ready(function(){
+  // skyshard klicks 
+  $( ".marker-on-map" ).click(function() {
+    $( this ).toggleClass( "collected" );
+    
+    var shard = $(this).attr("id"); 
+		if ( $( this ).hasClass( "collected" ) ) {
+      $.post("api.php", {"id": shard, "collected": "1"});
+		} else {
+      $.post("api.php", {"id": shard, "collected": "0"});
+		}
+		
+	});
+  
+  // burger nav icon
+  $('#nav-icon').click(function(){
+    $(this).toggleClass("open");
+    if ( $( this ).hasClass( "open" ) ) {
+      $('#menu').fadeIn("slow");
+		} else {
+      $('#menu').fadeOut("slow");
+		}
+  });
+    
+});
 
 
+/* sure to leave this page? */
+var confirmOnPageExit = function (e) 
+{
+    // If we haven't been passed the event get the window.event
+    e = e || window.event;
 
+    var message = 'Diese Seite wirklich verlassen?';
+
+    // For IE6-8 and Firefox prior to version 4
+    if (e) 
+    {
+        e.returnValue = message;
+    }
+
+    // For Chrome, Safari, IE8+ and Opera 12+
+    return message;
+};
+// Turn it on - assign the function that returns the string
+window.onbeforeunload = confirmOnPageExit;
+// Turn it off - remove the function entirely
+// window.onbeforeunload = null;
 
 
 // start canvas smoke

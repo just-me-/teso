@@ -1,28 +1,16 @@
+<?php
+session_start();
+
+$version = "1.0.1";
+$map = $_GET["map"] ? $_GET["map"] : 'auridon';
+
+$datas = json_decode(file_get_contents("data/".$map.".json"), true);
+// file_put_contents("data/".$map.".json",json_encode($datas));
+?>
+
 <!doctype html>
 <html lang="de">
-	<?php
-	$version = "1.0.0";
-	$map = "auridon";
 	
-	$datas = array(
-				   array('x'=>75,'y'=>43),
-				   array('x'=>68,'y'=>53),
-				   array('x'=>54,'y'=>55),
-				   array('x'=>38,'y'=>59),
-				   array('x'=>51,'y'=>46),
-				   array('x'=>34,'y'=>46),
-				   array('x'=>88,'y'=>59),
-				   array('x'=>12,'y'=>40),
-				   array('x'=>66,'y'=>41),
-				   array('x'=>20,'y'=>18),
-				   array('x'=>83,'y'=>57),
-				   array('x'=>30,'y'=>41),
-				   array('x'=>81,'y'=>69),
-				   array('x'=>50,'y'=>68),
-				   array('x'=>39,'y'=>42),
-				   array('x'=>30,'y'=>57),
-				  );
-	?>
 	
   <head>
     <meta charset="utf-8">
@@ -51,9 +39,25 @@
 	</canvas>
 		
 	<div class="main">
+		
 		<div class="bg"></div>
 		<div class="container">
 			
+			<div id="menu" style="display: none;">
+				<div class="aldmeri">
+					<img class="icon" src="img/aldmeri.png">
+					<a href="./?map=khenarthis_rast">Khenarthis Rast</a>
+					<a href="./?map=auridon">Auridon</a>
+					<a href="./?map=gruenschatten">Gruenschatten</a>
+					<a href="./?map=cyrodiil_a">Cyrodiil Auridon</a>
+				</div>
+			</div>
+		
+			<div id="nav-icon">
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
 			
 			<div id="map-holder">
 				<img class="mapa-slika" src="img/maps/<?php echo $map; ?>.jpg">
@@ -61,7 +65,14 @@
 				<?php
 				foreach ($datas as $row) {
 					if($row['x'] && $row['y']) {
-						echo '<div class="marker-on-map" style="top: '.$row['x'].'%; left: '.$row['y'].'%;"></div>';
+						$shard_id = $map . '_' . $row['index'];
+						$collected = $_SESSION[$shard_id] == 1 ? "collected" : ""; 
+						
+						echo '	<div id="' . $shard_id . '" class="marker-on-map ' . $collected . '" style="top: '.$row['x'].'%; left: '.$row['y'].'%;">
+									<div class="pulse_rays"></div>
+								</div>
+							'
+						;
 					}
 				}
 				?>
@@ -71,26 +82,9 @@
 		
 		</div>
 	</div>
-		
-    
-    <script>
-		
-		
-	$( ".marker-on-map" ).click(function() {
-		if ( $( this ).hasClass( "collected" ) ) {
-			$( this ).removeClass( "collected" );
-		} else {
-			$( this ).addClass( "collected" );
-		}
-		
-	});
+	
 
-		
-		
-		
-	</script>
-    
     <script src="js/teso.js?version=%22<?php echo $version; ?>%22"></script>
-    
+	
   </body>
 </html>
