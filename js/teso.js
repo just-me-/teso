@@ -25,8 +25,18 @@ $(document).ready(function(){
     
 });
 
+// functions
+function chance_menulinks($active, $show_classes) {
+	$(".alliance .icon").removeClass("active");
+	$(".alliance #"+$active).addClass("active");
+	
+   $('*[class^="only_"]').hide();
+   $("."+$show_classes).show();
+}
+
 
 /* sure to leave this page? */
+/* 
 var confirmOnPageExit = function (e) 
 {
     // If we haven't been passed the event get the window.event
@@ -43,8 +53,9 @@ var confirmOnPageExit = function (e)
     // For Chrome, Safari, IE8+ and Opera 12+
     return message;
 };
+*/
 // Turn it on - assign the function that returns the string
-window.onbeforeunload = confirmOnPageExit;
+// window.onbeforeunload = confirmOnPageExit;
 // Turn it off - remove the function entirely
 // window.onbeforeunload = null;
 

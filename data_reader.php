@@ -2,8 +2,9 @@
 
 <!-- paste here your html -->
 <div id=html_insert>
-
-
+	
+<div class="map-post">
+</div>
 
 </div>
 <!-- end html -->

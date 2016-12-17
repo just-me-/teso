@@ -1,8 +1,47 @@
 <?php
 session_start();
 
-$version = "1.0.1";
+$version = "1.0.2";
 $map = $_GET["map"] ? $_GET["map"] : 'auridon';
+
+// menu data
+$menu_dolch = [
+		"betnihk" 			=> "Betnikh",
+		"strosmkai"			=> "Stros M'Kai",
+		"alikrdesert" 	=> "Alikr-Wüste",
+		"bangkorai" 		=> "Bangkorai",
+		"glenumbra"			=> "Glenumbra",
+		"rivenspire" 		=> "Kluftspitze",
+		"stormhaven" 		=> "Sturmhafen",
+    "cyrodiil_d" 		=> "Cyrodiil Dolch"
+];
+
+$menu_aldmeri = [
+    "khenarthis_rast" 	=> "Khenarthis Rast",
+    "auridon" 					=> "Auridon",
+    "grahtwald" 				=> "Grahtwald",
+    "gruenschatten" 		=> "Grünschatten",
+    "malabaltor"				=> "Malabal Tor",
+    "schnittermark" 		=> "Schnittermark",
+    "cyrodiil_a" 				=> "Cyrodiil Alderi"
+];
+
+$menu_ebenherz = [
+		"balfoyen" 			=> "Bal Foyen",
+		"bleakrock" 		=> "Ödfels",
+		"deshaan" 			=> "Deshaan",
+		"eastmarch" 		=> "Ostmarsch",
+		"therift" 			=> "Rift",
+		"shadowfen" 		=> "Schattenfenn",
+		"stonefalls" 		=> "Steinfälle",
+    "cyrodiil_e" 		=> "Cyrodiil Ebenherz"
+];
+
+$menu_all = [
+	"kalthafen" => "Kalthafen",
+	"kargstein" => "Kargstein"
+];
+
 
 $datas = json_decode(file_get_contents("data/".$map.".json"), true);
 // file_put_contents("data/".$map.".json",json_encode($datas));
@@ -20,7 +59,9 @@ $datas = json_decode(file_get_contents("data/".$map.".json"), true);
     <title>TESO Skyshards</title>
     
     <!-- fonts -->
+		<!--
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		-->
     <!-- end fonts -->
 	
     <link href="css/teso.css?version=%22<?php echo $version; ?>%22" rel="stylesheet">
@@ -44,13 +85,46 @@ $datas = json_decode(file_get_contents("data/".$map.".json"), true);
 		<div class="container">
 			
 			<div id="menu" style="display: none;">
-				<div class="aldmeri">
-					<img class="icon" src="img/aldmeri.png">
-					<a href="./?map=khenarthis_rast">Khenarthis Rast</a>
-					<a href="./?map=auridon">Auridon</a>
-					<a href="./?map=gruenschatten">Gruenschatten</a>
-					<a href="./?map=cyrodiil_a">Cyrodiil Auridon</a>
+				<div class="alliance">
+					<div id="dagger" class="icon" onclick="chance_menulinks('dagger', 'only_d');">
+						<img src="img/dagger.png">
+					</div>
+					<div id="aldmeri" class="icon active" onclick="chance_menulinks('aldmeri', 'only_a');">
+						<img src="img/aldmeri.png">
+					</div>
+					<div id="ebon" class="icon" onclick="chance_menulinks('ebon', 'only_e');">
+						<img src="img/ebon.png">
+					</div>
 				</div>
+				
+				<div class="links">
+					
+					<?php
+					
+					foreach($menu_dolch as $mapname => $label)
+					{
+						echo '<a class="only_d'. (($_GET["map"] == $mapname) ? " active" : "") .'" style="display: none;" href="./?map='. $mapname .'">'. $label .'</a>'; 
+					}
+					foreach($menu_aldmeri as $mapname => $label)
+					{
+						echo '<a class="only_a'. (($_GET["map"] == $mapname) ? " active" : "") .'" href="./?map='. $mapname .'">'. $label .'</a>'; 
+					}
+					foreach($menu_ebenherz as $mapname => $label)
+					{
+						echo '<a class="only_e'. (($_GET["map"] == $mapname) ? " active" : "") .'" style="display: none;" href="./?map='. $mapname .'">'. $label .'</a>'; 
+					}
+					foreach($menu_all as $mapname => $label)
+					{
+						echo '<a class="'. (($_GET["map"] == $mapname) ? " active" : "") .'" href="./?map='. $mapname .'">'. $label .'</a>'; 
+					}
+					
+					?>
+					
+				</div>
+				
+				
+				
+				
 			</div>
 		
 			<div id="nav-icon">
@@ -66,7 +140,7 @@ $datas = json_decode(file_get_contents("data/".$map.".json"), true);
 				foreach ($datas as $row) {
 					if($row['x'] && $row['y']) {
 						$shard_id = $map . '_' . $row['index'];
-						$collected = $_SESSION[$shard_id] == 1 ? "collected" : ""; 
+						$collected = $_COOKIE[$shard_id] == 1 ? "collected" : ""; 
 						
 						echo '	<div id="' . $shard_id . '" class="marker-on-map ' . $collected . '" style="top: '.$row['x'].'%; left: '.$row['y'].'%;">
 									<div class="pulse_rays"></div>
